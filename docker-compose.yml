@@ -1,0 +1,71 @@
+name: campusbite-ai
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: campusbite-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRES_HOST: db
+      REDIS_HOST: redis
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend/app:/app/app
+      - ./backend/alembic:/app/alembic
+    networks:
+      - campusbite-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: campusbite-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-campusbite}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-campusbite}
+      POSTGRES_DB: ${POSTGRES_DB:-campusbite}
+    ports:
+      - "5433:5432"
+    volumes:
+      - campusbite-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-campusbite}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - campusbite-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: campusbite-redis
+    restart: unless-stopped
+    command: [ "redis-server", "--appendonly", "yes" ]
+    ports:
+      - "6380:6379"
+    volumes:
+      - campusbite-redis-data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - campusbite-network
+
+networks:
+  campusbite-network:
+    driver: bridge
+
+volumes:
+  campusbite-db-data:
+  campusbite-redis-data:

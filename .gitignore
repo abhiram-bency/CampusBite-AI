@@ -1,0 +1,68 @@
+# --- Python ---------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# --- Virtual environments ---------------------------------------------------------------
+__pycache__/
+.venv/
+venv/
+env/
+*.egg-info/
+
+# --- Env / secrets ----------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# --- Testing / tooling caches -----------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+
+# --- Node / React (dashboard, added in a future milestone) -----------------
+node_modules/
+dist/
+build/
+
+# --- Docker -------------------------------------------------------------------
+*.pid
+
+# --- IDE --------------------------------------------------------------------
+.vscode/
+.idea/
+
+# --- OS ---------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# --- Alembic ------------------------------------------------------------------
+# (migration files ARE tracked; this only ignores local scratch artifacts)
+*.sqlite3
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Logs
+*.log
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Docker
+postgres_data/
+redis_data/
+
+# Local databases
+*.sqlite3
+
+# Misc
+.cache/
