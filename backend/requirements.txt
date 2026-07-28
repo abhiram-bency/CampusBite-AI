@@ -42,3 +42,8 @@ httpx==0.28.1
 ruff==0.8.4
 mypy==1.14.0
 pre-commit==4.0.1
+
+# --- Auth (Patch 1: Authentication Foundation) ---------------------------
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+email-validator==2.2.0

@@ -18,6 +18,8 @@ from app.database.engine import check_database_connection, dispose_engine
 from app.core.exceptions import register_exception_handlers
 from app.core.logging import configure_logging, get_logger
 from app.core.redis import check_redis_connection, close_redis_connection
+from app.modules.auth.router import router as auth_router
+from app.modules.vendors.router import router as vendors_router
 
 settings = get_settings()
 
@@ -103,10 +105,13 @@ def create_app() -> FastAPI:
 
     register_exception_handlers(app)
 
-    # NOTE: Business module routers (students, stalls, bookings, vendors,
-    # admin, ai, etc.) are intentionally NOT included in Milestone 1.
-    # They will be wired up as `app.include_router(...)` calls in their
-    # respective milestones.
+    app.include_router(auth_router, prefix=settings.API_V1_PREFIX)
+    app.include_router(vendors_router, prefix=settings.API_V1_PREFIX)
+
+    # NOTE: Remaining business module routers (stalls, bookings, admin,
+    # ai, etc.) are intentionally NOT included yet. They will be wired
+    # up as `app.include_router(...)` calls in their respective future
+    # patches/milestones.
 
     @app.get(f"{settings.API_V1_PREFIX}/health", tags=["Health"])
     async def health_check() -> dict[str, object]:
